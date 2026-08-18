@@ -1,63 +1,51 @@
+import os
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch.actions import IncludeLaunchDescription
-from launch.launch_description_sources import AnyLaunchDescriptionSource
-import os
-from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
     return LaunchDescription([
-        
-        # 1. Foxglove Bridge
+        # Foxglove Bridge
         Node(
             package='foxglove_bridge',
             executable='foxglove_bridge',
             name='foxglove_bridge',
-            parameters=[{
-                'use_sim_time': True,
-                'port': 8765,
-            }],
             output='screen',
+            parameters=[{'use_sim_time': True}]
         ),
 
-        # 2. Gazebo Bridge - FIXED FORMAT
+        # ROS-GZ Parameter Bridge for 2D LaserScan
         Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
-            name='lidar_bridge',
-            parameters=[{'use_sim_time': True}],
-            arguments=[
-                # CORRECT FORMAT: ros_topic@ros_type[gz_type
-                '/vessel/lidar/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked'
-            ],
+            name='ros_gz_bridge',
             output='screen',
-            # Add remapping to make the topic name simpler
-            remappings=[
-                ('/vessel/lidar/points', '/lidar/points')
-            ]
+            arguments=[
+                '/vessel/lidar@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
+                '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'
+            ],
+            parameters=[{'use_sim_time': True}]
         ),
 
-        # 3. Static TF2 Publisher
+        # Static TF Chain
         Node(
             package='tf2_ros',
             executable='static_transform_publisher',
-            name='lidar_tf_publisher',
-            parameters=[{'use_sim_time': True}],
-            arguments=[
-                '0', '0', '-0.1', '0', '0', '0', 
-                'base_link', 'lidar_link'
-            ],
-            output='screen'
+            name='static_tf_map_odom',
+            arguments=['0', '0', '0', '0', '0', '0', 'map', 'odom'],
+            parameters=[{'use_sim_time': True}]
         ),
-
-        # 4. MAVROS
-        IncludeLaunchDescription(
-            AnyLaunchDescriptionSource(
-                os.path.join(get_package_share_directory('mavros'), 'launch', 'apm.launch')
-            ),
-            launch_arguments={
-                'fcu_url': 'udp://127.0.0.1:14550@14555',
-                'use_sim_time': 'true',
-            }.items(),
+        Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            name='static_tf_odom_base',
+            arguments=['0', '0', '0', '0', '0', '0', 'odom', 'base_link'],
+            parameters=[{'use_sim_time': True}]
+        ),
+        Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            name='static_tf_vessel_lidar',
+            arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'vessel/lidar'],
+            parameters=[{'use_sim_time': True}]
         ),
     ])

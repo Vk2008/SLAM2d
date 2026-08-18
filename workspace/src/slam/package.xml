@@ -3,18 +3,15 @@
 <package format="3">
   <name>slam</name>
   <version>0.0.0</version>
-  <description>SLAM and Safety Filter package for ArduPilot drone</description>
-  <maintainer email="ph1251320@physics.iitd.ac.in">ubuntu</maintainer>
+  <description>SLAM and sensor bridging launch package</description>
+  <maintainer email="ph1251320@physics.iitd.ac.in">user</maintainer>
   <license>TODO: License declaration</license>
 
   <depend>rclpy</depend>
   <depend>sensor_msgs</depend>
-  <depend>geometry_msgs</depend>
-  <depend>nav_msgs</depend>
-  <depend>mavros_msgs</depend>
+  <depend>ros_gz_bridge</depend>
+  <depend>foxglove_bridge</depend>
   <depend>tf2_ros</depend>
-  <exec_depend>ros_gz_bridge</exec_depend>
-  <exec_depend>foxglove_bridge</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
