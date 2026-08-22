@@ -32,265 +32,513 @@
       <static>true</static>
       <link name="link">
         <collision name="collision">
-          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <geometry><plane><normal>0 0 1</normal><size>16 13</size></plane></geometry>
         </collision>
         <visual name="visual">
-          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <geometry><plane><normal>0 0 1</normal><size>16 13</size></plane></geometry>
           <material>
-            <ambient>0.6 0.45 0.3 1</ambient>
-            <diffuse>0.6 0.45 0.3 1</diffuse>
+            <ambient>0.55 0.55 0.55 1</ambient>
+            <diffuse>0.55 0.55 0.55 1</diffuse>
             <specular>0.1 0.1 0.1 1</specular>
           </material>
         </visual>
       </link>
     </model>
 
-    <model name="apartment_structure">
+    <!-- Maze walls: uniform 1.0 m clear corridor width, 2.45 m tall
+         (>8 ft / 2.4384 m clearance under the net), modular grid layout.
+         3 junctions off the main spine, 2 with 90-deg turns, 6 rooms (2x2 m).
+         Total footprint 14.2 m x 11.0 m (<= 15 m x 15 m spec).
+         Single opening at the west end of the spine = entry AND exit point. -->
+    <model name="maze_structure">
       <static>true</static>
-      
-      <link name="wall_north"><pose>0 9 1.5 0 0 0</pose><collision name="c"><geometry><box><size>24 0.2 3.0</size></box></geometry></collision><visual name="v"><geometry><box><size>24 0.2 3.0</size></box></geometry><material><ambient>0.93 0.91 0.88 1</ambient><diffuse>0.93 0.91 0.88 1</diffuse></material></visual></link>
-      <link name="wall_south"><pose>0 -9 1.5 0 0 0</pose><collision name="c"><geometry><box><size>24 0.2 3.0</size></box></geometry></collision><visual name="v"><geometry><box><size>24 0.2 3.0</size></box></geometry><material><ambient>0.93 0.91 0.88 1</ambient><diffuse>0.93 0.91 0.88 1</diffuse></material></visual></link>
-      <link name="wall_east"><pose>12 0 1.5 0 0 0</pose><collision name="c"><geometry><box><size>0.2 18 3.0</size></box></geometry></collision><visual name="v"><geometry><box><size>0.2 18 3.0</size></box></geometry><material><ambient>0.93 0.91 0.88 1</ambient><diffuse>0.93 0.91 0.88 1</diffuse></material></visual></link>
-      <link name="wall_west"><pose>-12 0 1.5 0 0 0</pose><collision name="c"><geometry><box><size>0.2 18 3.0</size></box></geometry></collision><visual name="v"><geometry><box><size>0.2 18 3.0</size></box></geometry><material><ambient>0.93 0.91 0.88 1</ambient><diffuse>0.93 0.91 0.88 1</diffuse></material></visual></link>
-
-      <link name="hall_n_1"><pose>-9 1.5 1.5 0 0 0</pose><collision name="c"><geometry><box><size>6 0.2 3.0</size></box></geometry></collision><visual name="v"><geometry><box><size>6 0.2 3.0</size></box></geometry><material><ambient>0.93 0.91 0.88 1</ambient><diffuse>0.93 0.91 0.88 1</diffuse></material></visual></link>
-      <link name="hall_n_2"><pose>-1.5 1.5 1.5 0 0 0</pose><collision name="c"><geometry><box><size>6 0.2 3.0</size></box></geometry></collision><visual name="v"><geometry><box><size>6 0.2 3.0</size></box></geometry><material><ambient>0.93 0.91 0.88 1</ambient><diffuse>0.93 0.91 0.88 1</diffuse></material></visual></link>
-      <link name="hall_s_1"><pose>-9 -1.5 1.5 0 0 0</pose><collision name="c"><geometry><box><size>6 0.2 3.0</size></box></geometry></collision><visual name="v"><geometry><box><size>6 0.2 3.0</size></box></geometry><material><ambient>0.93 0.91 0.88 1</ambient><diffuse>0.93 0.91 0.88 1</diffuse></material></visual></link>
-      <link name="hall_s_2"><pose>-1.5 -1.5 1.5 0 0 0</pose><collision name="c"><geometry><box><size>6 0.2 3.0</size></box></geometry></collision><visual name="v"><geometry><box><size>6 0.2 3.0</size></box></geometry><material><ambient>0.93 0.91 0.88 1</ambient><diffuse>0.93 0.91 0.88 1</diffuse></material></visual></link>
-
-      <link name="div_bed1_2"><pose>-4.5 5.25 1.5 0 0 0</pose><collision name="c"><geometry><box><size>0.2 7.5 3.0</size></box></geometry></collision><visual name="v"><geometry><box><size>0.2 7.5 3.0</size></box></geometry><material><ambient>0.93 0.91 0.88 1</ambient><diffuse>0.93 0.91 0.88 1</diffuse></material></visual></link>
-      <link name="div_bed2_kit"><pose>3 5.25 1.5 0 0 0</pose><collision name="c"><geometry><box><size>0.2 7.5 3.0</size></box></geometry></collision><visual name="v"><geometry><box><size>0.2 7.5 3.0</size></box></geometry><material><ambient>0.93 0.91 0.88 1</ambient><diffuse>0.93 0.91 0.88 1</diffuse></material></visual></link>
-      <link name="kit_south"><pose>8.25 3 1.5 0 0 0</pose><collision name="c"><geometry><box><size>7.5 0.2 3.0</size></box></geometry></collision><visual name="v"><geometry><box><size>7.5 0.2 3.0</size></box></geometry><material><ambient>0.93 0.91 0.88 1</ambient><diffuse>0.93 0.91 0.88 1</diffuse></material></visual></link>
-
-      <link name="master_e_1"><pose>-4.5 -2.25 1.5 0 0 0</pose><collision name="c"><geometry><box><size>0.2 1.5 3.0</size></box></geometry></collision><visual name="v"><geometry><box><size>0.2 1.5 3.0</size></box></geometry><material><ambient>0.93 0.91 0.88 1</ambient><diffuse>0.93 0.91 0.88 1</diffuse></material></visual></link>
-      <link name="master_e_2"><pose>-4.5 -6.75 1.5 0 0 0</pose><collision name="c"><geometry><box><size>0.2 4.5 3.0</size></box></geometry></collision><visual name="v"><geometry><box><size>0.2 4.5 3.0</size></box></geometry><material><ambient>0.93 0.91 0.88 1</ambient><diffuse>0.93 0.91 0.88 1</diffuse></material></visual></link>
-      <link name="div_bath_liv"><pose>3 -5.25 1.5 0 0 0</pose><collision name="c"><geometry><box><size>0.2 7.5 3.0</size></box></geometry></collision><visual name="v"><geometry><box><size>0.2 7.5 3.0</size></box></geometry><material><ambient>0.93 0.91 0.88 1</ambient><diffuse>0.93 0.91 0.88 1</diffuse></material></visual></link>
-      <link name="div_ensuite_com"><pose>-0.75 -5.25 1.5 0 0 0</pose><collision name="c"><geometry><box><size>0.2 7.5 3.0</size></box></geometry></collision><visual name="v"><geometry><box><size>0.2 7.5 3.0</size></box></geometry><material><ambient>0.93 0.91 0.88 1</ambient><diffuse>0.93 0.91 0.88 1</diffuse></material></visual></link>
-
-      <link name="glass_ceiling">
-        <pose>0 0 3.05 0 0 0</pose>
-        <collision name="c"><geometry><box><size>24.2 18.2 0.1</size></box></geometry></collision>
+      <link name="wall_v1">
+        <pose>-1.24 -0.0 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 0.96 2.45</size></box></geometry></collision>
         <visual name="v">
-          <geometry><box><size>24.2 18.2 0.1</size></box></geometry>
+          <geometry><box><size>0.12 0.96 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v2">
+        <pose>2.0 -4.5 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 2.04 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 2.04 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v3">
+        <pose>2.0 4.5 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 2.04 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 2.04 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v4">
+        <pose>2.48 -1.98 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 3.0 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 3.0 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v5">
+        <pose>2.48 1.98 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 3.0 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 3.0 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v6">
+        <pose>3.56 -1.08 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 1.2 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 1.2 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v7">
+        <pose>3.56 1.98 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 3.0 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 3.0 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v8">
+        <pose>4.04 -4.62 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 1.8 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 1.8 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v9">
+        <pose>4.04 4.5 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 2.04 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 2.04 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v10">
+        <pose>4.52 -3.24 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 0.96 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 0.96 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v11">
+        <pose>6.44 -1.08 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 1.2 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 1.2 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v12">
+        <pose>6.44 1.5 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 2.04 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 2.04 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v13">
+        <pose>7.52 -1.62 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 2.28 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 2.28 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v14">
+        <pose>7.52 0.96 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 0.96 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 0.96 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v15">
+        <pose>9.44 3.0 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 0.96 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 0.96 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v16">
+        <pose>10.04 -4.5 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 2.04 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 2.04 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v17">
+        <pose>10.04 4.5 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 2.04 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 2.04 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v18">
+        <pose>10.52 -1.98 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 3.0 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 3.0 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v19">
+        <pose>10.52 0.96 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 0.96 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 0.96 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v20">
+        <pose>11.48 -1.98 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 3.0 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 3.0 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v21">
+        <pose>11.48 1.98 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 3.0 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 3.0 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v22">
+        <pose>11.96 -4.5 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 2.04 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 2.04 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v23">
+        <pose>11.96 4.5 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 2.04 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 2.04 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_v24">
+        <pose>12.56 -0.0 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.12 0.96 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.12 0.96 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h25">
+        <pose>3.02 -5.52 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>2.04 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>2.04 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h26">
+        <pose>11.0 -5.52 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>1.92 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>1.92 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h27">
+        <pose>4.28 -3.72 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.48 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.48 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h28">
+        <pose>2.24 -3.48 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.48 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.48 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h29">
+        <pose>10.28 -3.48 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.48 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.48 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h30">
+        <pose>11.72 -3.48 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.48 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.48 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h31">
+        <pose>6.02 -2.76 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>3.0 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>3.0 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h32">
+        <pose>5.0 -1.68 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>2.88 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>2.88 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h33">
+        <pose>0.62 -0.48 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>3.72 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>3.72 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h34">
+        <pose>5.0 -0.48 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>2.88 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>2.88 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h35">
+        <pose>9.02 -0.48 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>3.0 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>3.0 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h36">
+        <pose>12.02 -0.48 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>1.08 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>1.08 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h37">
+        <pose>0.62 0.48 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>3.72 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>3.72 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h38">
+        <pose>5.0 0.48 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>2.88 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>2.88 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h39">
+        <pose>9.02 0.48 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>3.0 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>3.0 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h40">
+        <pose>12.02 0.48 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>1.08 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>1.08 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h41">
+        <pose>9.02 1.44 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>3.0 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>3.0 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h42">
+        <pose>7.94 2.52 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>3.0 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>3.0 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h43">
+        <pose>2.24 3.48 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.48 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.48 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h44">
+        <pose>3.8 3.48 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.48 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.48 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h45">
+        <pose>9.74 3.48 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.6 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.6 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h46">
+        <pose>11.72 3.48 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>0.48 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>0.48 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h47">
+        <pose>3.02 5.52 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>2.04 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>2.04 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+      <link name="wall_h48">
+        <pose>11.0 5.52 1.225 0 0 0</pose>
+        <collision name="c"><geometry><box><size>1.92 0.12 2.45</size></box></geometry></collision>
+        <visual name="v">
+          <geometry><box><size>1.92 0.12 2.45</size></box></geometry>
+          <material><ambient>0.85 0.85 0.82 1</ambient><diffuse>0.85 0.85 0.82 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Net-covered top: simulates the covered/GPS-denied indoor arena.
+         Placed right at the 8 ft clearance line so nothing below it is blocked. -->
+    <model name="arena_net_cover">
+      <static>true</static>
+      <link name="net">
+        <pose>5.8 0.0 2.48 0 0 0</pose>
+        <visual name="v">
+          <geometry><box><size>14.799999999999999 11.4 0.03</size></box></geometry>
           <material>
-            <ambient>0.85 0.9 0.95 0.35</ambient>
-            <diffuse>0.85 0.9 0.95 0.35</diffuse>
-            <specular>1.0 1.0 1.0 0.3</specular>
-            <pbr>
-              <metal>
-                <roughness>0.05</roughness>
-                <metalness>0.1</metalness>
-              </metal>
-            </pbr>
+            <ambient>0.2 0.2 0.2 0.25</ambient>
+            <diffuse>0.2 0.2 0.2 0.25</diffuse>
+            <specular>0.1 0.1 0.1 0.1</specular>
           </material>
         </visual>
       </link>
     </model>
 
-    <model name="dining_table">
+    <!-- Survivors (up to 6), one per room, to be detected + localized on the 2D map -->
+    <model name="survivor_1">
       <static>true</static>
-      <pose>7 6 0 0 0 0</pose>
-      <link name="top">
-        <pose>0 0 0.8 0 0 0</pose>
-        <collision name="c"><geometry><box><size>2 1 0.05</size></box></geometry></collision>
+      <pose>3.0 4.5 0.4 0 0 0</pose>
+      <link name="body">
         <visual name="v">
-          <geometry><box><size>2 1 0.05</size></box></geometry>
-          <material><ambient>0.5 0.35 0.2 1</ambient><diffuse>0.5 0.35 0.2 1</diffuse></material>
+          <geometry><cylinder><radius>0.18</radius><length>0.8</length></cylinder></geometry>
+          <material><ambient>0.85 0.1 0.1 1</ambient><diffuse>0.85 0.1 0.1 1</diffuse></material>
         </visual>
-      </link>
-      <link name="leg1"><pose>0.9 0.4 0.4 0 0 0</pose><visual name="v"><geometry><cylinder><radius>0.04</radius><length>0.8</length></cylinder></geometry><material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material></visual></link>
-      <link name="leg2"><pose>-0.9 0.4 0.4 0 0 0</pose><visual name="v"><geometry><cylinder><radius>0.04</radius><length>0.8</length></cylinder></geometry><material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material></visual></link>
-      <link name="leg3"><pose>0.9 -0.4 0.4 0 0 0</pose><visual name="v"><geometry><cylinder><radius>0.04</radius><length>0.8</length></cylinder></geometry><material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material></visual></link>
-      <link name="leg4"><pose>-0.9 -0.4 0.4 0 0 0</pose><visual name="v"><geometry><cylinder><radius>0.04</radius><length>0.8</length></cylinder></geometry><material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material></visual></link>
-    </model>
-
-    <model name="sofa">
-      <static>true</static>
-      <pose>6 -5 0 0 0 1.5708</pose>
-      <link name="seat">
-        <pose>0 0 0.25 0 0 0</pose>
-        <collision name="c"><geometry><box><size>2.2 0.9 0.5</size></box></geometry></collision>
-        <visual name="v">
-          <geometry><box><size>2.2 0.9 0.5</size></box></geometry>
-          <material><ambient>0.1 0.5 0.5 1</ambient><diffuse>0.1 0.5 0.5 1</diffuse></material>
-        </visual>
-      </link>
-      <link name="backrest">
-        <pose>0 0.35 0.7 0 0 0</pose>
-        <collision name="c"><geometry><box><size>2.2 0.2 0.6</size></box></geometry></collision>
-        <visual name="v">
-          <geometry><box><size>2.2 0.2 0.6</size></box></geometry>
-          <material><ambient>0.1 0.5 0.5 1</ambient><diffuse>0.1 0.5 0.5 1</diffuse></material>
-        </visual>
-      </link>
-      <link name="arm_left">
-        <pose>-1.0 0 0.55 0 0 0</pose>
-        <visual name="v">
-          <geometry><box><size>0.2 0.9 0.4</size></box></geometry>
-          <material><ambient>0.05 0.4 0.4 1</ambient><diffuse>0.05 0.4 0.4 1</diffuse></material>
-        </visual>
-      </link>
-      <link name="arm_right">
-        <pose>1.0 0 0.55 0 0 0</pose>
-        <visual name="v">
-          <geometry><box><size>0.2 0.9 0.4</size></box></geometry>
-          <material><ambient>0.05 0.4 0.4 1</ambient><diffuse>0.05 0.4 0.4 1</diffuse></material>
-        </visual>
+        <collision name="c"><geometry><cylinder><radius>0.18</radius><length>0.8</length></cylinder></geometry></collision>
       </link>
     </model>
-
-    <model name="master_bed">
+    <model name="survivor_2">
       <static>true</static>
-      <pose>-10 -7 0 0 0 0</pose>
-      <link name="frame">
-        <pose>0 0 0.15 0 0 0</pose>
-        <collision name="c"><geometry><box><size>1.8 2.1 0.3</size></box></geometry></collision>
+      <pose>3.0 -4.5 0.4 0 0 0</pose>
+      <link name="body">
         <visual name="v">
-          <geometry><box><size>1.8 2.1 0.3</size></box></geometry>
-          <material><ambient>0.2 0.1 0.05 1</ambient><diffuse>0.2 0.1 0.05 1</diffuse></material>
+          <geometry><cylinder><radius>0.18</radius><length>0.8</length></cylinder></geometry>
+          <material><ambient>0.85 0.1 0.1 1</ambient><diffuse>0.85 0.1 0.1 1</diffuse></material>
         </visual>
+        <collision name="c"><geometry><cylinder><radius>0.18</radius><length>0.8</length></cylinder></geometry></collision>
       </link>
-      <link name="mattress">
-        <pose>0 0.05 0.4 0 0 0</pose>
-        <collision name="c"><geometry><box><size>1.6 1.9 0.2</size></box></geometry></collision>
+    </model>
+    <model name="survivor_3">
+      <static>true</static>
+      <pose>10.5 2.5 0.4 0 0 0</pose>
+      <link name="body">
         <visual name="v">
-          <geometry><box><size>1.6 1.9 0.2</size></box></geometry>
-          <material><ambient>0.9 0.9 0.95 1</ambient><diffuse>0.9 0.9 0.95 1</diffuse></material>
+          <geometry><cylinder><radius>0.18</radius><length>0.8</length></cylinder></geometry>
+          <material><ambient>0.85 0.1 0.1 1</ambient><diffuse>0.85 0.1 0.1 1</diffuse></material>
         </visual>
+        <collision name="c"><geometry><cylinder><radius>0.18</radius><length>0.8</length></cylinder></geometry></collision>
       </link>
-      <link name="pillow1">
-        <pose>-0.4 0.8 0.55 0 0 0</pose>
+    </model>
+    <model name="survivor_4">
+      <static>true</static>
+      <pose>3.5 -2.7 0.4 0 0 0</pose>
+      <link name="body">
         <visual name="v">
-          <geometry><box><size>0.6 0.3 0.1</size></box></geometry>
-          <material><ambient>0.2 0.3 0.6 1</ambient><diffuse>0.2 0.3 0.6 1</diffuse></material>
+          <geometry><cylinder><radius>0.18</radius><length>0.8</length></cylinder></geometry>
+          <material><ambient>0.85 0.1 0.1 1</ambient><diffuse>0.85 0.1 0.1 1</diffuse></material>
         </visual>
+        <collision name="c"><geometry><cylinder><radius>0.18</radius><length>0.8</length></cylinder></geometry></collision>
       </link>
-      <link name="pillow2">
-        <pose>0.4 0.8 0.55 0 0 0</pose>
+    </model>
+    <model name="survivor_5">
+      <static>true</static>
+      <pose>11.0 4.5 0.4 0 0 0</pose>
+      <link name="body">
         <visual name="v">
-          <geometry><box><size>0.6 0.3 0.1</size></box></geometry>
-          <material><ambient>0.2 0.3 0.6 1</ambient><diffuse>0.2 0.3 0.6 1</diffuse></material>
+          <geometry><cylinder><radius>0.18</radius><length>0.8</length></cylinder></geometry>
+          <material><ambient>0.85 0.1 0.1 1</ambient><diffuse>0.85 0.1 0.1 1</diffuse></material>
         </visual>
+        <collision name="c"><geometry><cylinder><radius>0.18</radius><length>0.8</length></cylinder></geometry></collision>
+      </link>
+    </model>
+    <model name="survivor_6">
+      <static>true</static>
+      <pose>11.0 -4.5 0.4 0 0 0</pose>
+      <link name="body">
+        <visual name="v">
+          <geometry><cylinder><radius>0.18</radius><length>0.8</length></cylinder></geometry>
+          <material><ambient>0.85 0.1 0.1 1</ambient><diffuse>0.85 0.1 0.1 1</diffuse></material>
+        </visual>
+        <collision name="c"><geometry><cylinder><radius>0.18</radius><length>0.8</length></cylinder></geometry></collision>
       </link>
     </model>
 
-    <model name="guest_bed_1">
+    <!-- Entry/exit marker pad (visual only) - the single designated entry AND exit point -->
+    <model name="entry_exit_pad">
       <static>true</static>
-      <pose>-10 7 0 0 0 0</pose>
-      <link name="frame">
-        <pose>0 0 0.15 0 0 0</pose>
+      <pose>-1.0 0 0.01 0 0 0</pose>
+      <link name="pad">
         <visual name="v">
-          <geometry><box><size>1.2 2.0 0.3</size></box></geometry>
-          <material><ambient>0.6 0.5 0.4 1</ambient><diffuse>0.6 0.5 0.4 1</diffuse></material>
+          <geometry><box><size>0.9 0.9 0.02</size></box></geometry>
+          <material><ambient>0.1 0.7 0.2 0.9</ambient><diffuse>0.1 0.7 0.2 0.9</diffuse></material>
         </visual>
-        <collision name="c"><geometry><box><size>1.2 2.0 0.3</size></box></geometry></collision>
-      </link>
-      <link name="mattress">
-        <pose>0 0.05 0.4 0 0 0</pose>
-        <visual name="v">
-          <geometry><box><size>1.0 1.8 0.2</size></box></geometry>
-          <material><ambient>0.95 0.95 0.95 1</ambient><diffuse>0.95 0.95 0.95 1</diffuse></material>
-        </visual>
-      </link>
-      <link name="pillow">
-        <pose>0 0.7 0.55 0 0 0</pose>
-        <visual name="v">
-          <geometry><box><size>0.6 0.3 0.1</size></box></geometry>
-          <material><ambient>0.4 0.6 0.5 1</ambient><diffuse>0.4 0.6 0.5 1</diffuse></material>
-        </visual>
-      </link>
-    </model>
-
-    <model name="guest_bed_2">
-      <static>true</static>
-      <pose>-1 7 0 0 0 0</pose>
-      <link name="frame">
-        <pose>0 0 0.15 0 0 0</pose>
-        <visual name="v">
-          <geometry><box><size>1.2 2.0 0.3</size></box></geometry>
-          <material><ambient>0.6 0.5 0.4 1</ambient><diffuse>0.6 0.5 0.4 1</diffuse></material>
-        </visual>
-        <collision name="c"><geometry><box><size>1.2 2.0 0.3</size></box></geometry></collision>
-      </link>
-      <link name="mattress">
-        <pose>0 0.05 0.4 0 0 0</pose>
-        <visual name="v">
-          <geometry><box><size>1.0 1.8 0.2</size></box></geometry>
-          <material><ambient>0.95 0.95 0.95 1</ambient><diffuse>0.95 0.95 0.95 1</diffuse></material>
-        </visual>
-      </link>
-      <link name="pillow">
-        <pose>0 0.7 0.55 0 0 0</pose>
-        <visual name="v">
-          <geometry><box><size>0.6 0.3 0.1</size></box></geometry>
-          <material><ambient>0.8 0.4 0.4 1</ambient><diffuse>0.8 0.4 0.4 1</diffuse></material>
-        </visual>
-      </link>
-    </model>
-
-    <model name="tv_unit">
-      <static>true</static>
-      <pose>11.5 -5 0 0 0 0</pose>
-      <link name="console">
-        <pose>-0.2 0 0.4 0 0 0</pose>
-        <visual name="v">
-          <geometry><box><size>0.4 2.5 0.8</size></box></geometry>
-          <material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material>
-        </visual>
-        <collision name="c"><geometry><box><size>0.4 2.5 0.8</size></box></geometry></collision>
-      </link>
-      <link name="tv_screen">
-        <pose>-0.1 0 1.5 0 0 0</pose>
-        <visual name="v">
-          <geometry><box><size>0.05 1.6 0.9</size></box></geometry>
-          <material>
-            <ambient>0.05 0.05 0.05 1</ambient>
-            <diffuse>0.05 0.05 0.05 1</diffuse>
-            <specular>0.8 0.8 0.8 1</specular>
-          </material>
-        </visual>
-        <collision name="c"><geometry><box><size>0.05 1.6 0.9</size></box></geometry></collision>
-      </link>
-    </model>
-
-    <model name="kitchen_setup">
-      <static>true</static>
-      <pose>11 6 0 0 0 0</pose>
-      <link name="island_base">
-        <pose>-1.5 0 0.45 0 0 0</pose>
-        <visual name="v">
-          <geometry><box><size>1.0 2.5 0.9</size></box></geometry>
-          <material><ambient>0.2 0.3 0.4 1</ambient><diffuse>0.2 0.3 0.4 1</diffuse></material> </visual>
-        <collision name="c"><geometry><box><size>1.0 2.5 0.9</size></box></geometry></collision>
-      </link>
-      <link name="island_countertop">
-        <pose>-1.5 0 0.925 0 0 0</pose>
-        <visual name="v">
-          <geometry><box><size>1.1 2.6 0.05</size></box></geometry>
-          <material>
-            <ambient>0.95 0.95 0.95 1</ambient> <diffuse>0.95 0.95 0.95 1</diffuse>
-            <specular>0.5 0.5 0.5 1</specular>
-          </material>
-        </visual>
-        <collision name="c"><geometry><box><size>1.1 2.6 0.05</size></box></geometry></collision>
-      </link>
-      <link name="fridge">
-        <pose>0.5 2.5 1.0 0 0 0</pose>
-        <visual name="v">
-          <geometry><box><size>0.8 0.8 2.0</size></box></geometry>
-          <material>
-            <ambient>0.7 0.7 0.75 1</ambient> <diffuse>0.7 0.7 0.75 1</diffuse>
-            <specular>0.8 0.8 0.8 1</specular>
-          </material>
-        </visual>
-        <collision name="c"><geometry><box><size>0.8 0.8 2.0</size></box></geometry></collision>
       </link>
     </model>
 
     <include>
-      <uri>file://drone.sdf</uri>
-      <pose degrees="true">6 -2 0.2 0 0 90</pose> 
-    </include>
+      <uri>drone.sdf</uri>
+      <pose degrees="true">-1.0 0 0.2 0 0 0</pose>
+    </include>sssssssss
 
   </world>
 </sdf>
