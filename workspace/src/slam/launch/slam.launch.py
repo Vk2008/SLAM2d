@@ -48,4 +48,9 @@ def generate_launch_description():
             arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'vessel/lidar'],
             parameters=[{'use_sim_time': True}]
         ),
+        Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            arguments=['0', '0', '0', '0', '0', '0', 'iris_with_gimbal/lidar_link/gpu_lidar', 'vessel/lidar']
+        )
     ])
