@@ -1,6 +1,9 @@
 import os
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import AnyLaunchDescriptionSource
+from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
     return LaunchDescription([
@@ -30,30 +33,6 @@ def generate_launch_description():
             parameters=[{'use_sim_time': True}]
         ),
 
-        # # Static TF Chain
-        # Node(
-        #     package='tf2_ros',
-        #     executable='static_transform_publisher',
-        #     name='static_tf_map_odom',
-        #     arguments=['0', '0', '0', '0', '0', '0', 'map', 'odom'],
-        #     parameters=[{'use_sim_time': True}]
-        # ),
-        # Node(
-        #     package='tf2_ros',
-        #     executable='static_transform_publisher',
-        #     name='static_tf_odom_base',
-        #     arguments=['0', '0', '0', '0', '0', '0', 'odom', 'base_link'],
-        #     parameters=[{'use_sim_time': True}]
-        # ),
-        # # ok
-        # Node(
-        #     package='tf2_ros',
-        #     executable='static_transform_publisher',
-        #     name='static_tf_vessel_lidar',
-        #     arguments=['0', '0', '0', '0', '0', '0', 'base_link', 'vessel/lidar'],
-        #     parameters=[{'use_sim_time': True}]
-        # ),
-
         # OK
         Node(
             package='tf2_ros',
@@ -74,6 +53,16 @@ def generate_launch_description():
             name='odom_to_tf_relay',
             parameters=[{'use_sim_time': True}], # <-- Added Sim Time
             output='screen'
+        ),
+
+        IncludeLaunchDescription(
+            AnyLaunchDescriptionSource(
+                os.path.join(get_package_share_directory('mavros'), 'launch', 'apm.launch')
+            ),
+            launch_arguments={
+                'fcu_url': 'udp://127.0.0.1:14550@14555',
+                'use_sim_time': 'true',          # <-- Added Sim Time for MAVROS
+            }.items()
         ),
 
         Node(
