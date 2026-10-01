@@ -12,7 +12,7 @@ def generate_launch_description():
     configuration_basename = 'cartographer.lua'
 
     return LaunchDescription([
-        # Foxglove Bridge
+        # 1. Foxglove Bridge
         Node(
             package='foxglove_bridge',
             executable='foxglove_bridge',
@@ -21,7 +21,7 @@ def generate_launch_description():
             parameters=[{'use_sim_time': True}]
         ),
 
-        # ROS-GZ Parameter Bridge for 2D LaserScan
+        # 2. ROS-GZ Parameter Bridge (Laser, Clock, Odom, IMU)
         Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
@@ -30,20 +30,22 @@ def generate_launch_description():
             arguments=[
                 '/vessel/lidar@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
                 '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
-                '/model/iris_with_gimbal/odometry@nav_msgs/msg/Odometry[gz.msgs.Odometry'
+                '/model/iris_with_gimbal/odometry@nav_msgs/msg/Odometry[gz.msgs.Odometry',
+                '/model/iris_with_gimbal/imu@sensor_msgs/msg/Imu[gz.msgs.IMU'
             ],
             remappings=[
-                ('/model/iris_with_gimbal/odometry', '/odom')
+                ('/model/iris_with_gimbal/odometry', '/gazebo/odometry'),
+                ('/model/iris_with_gimbal/imu', '/imu/data')
             ],
             parameters=[{'use_sim_time': True}]
         ),
 
-        # OK
+        # 3. Static Transform for LiDAR
         Node(
             package='tf2_ros',
             executable='static_transform_publisher',
             name='lidar_tf_publisher',
-            parameters=[{'use_sim_time': True}], # <-- Added Sim Time
+            parameters=[{'use_sim_time': True}],
             arguments=[
                 '0', '0', '-0.1', '0', '0', '0', 
                 'base_link', 'iris_with_gimbal/lidar_link/gpu_lidar'
@@ -51,39 +53,17 @@ def generate_launch_description():
             output='screen'
         ),
 
-        # OK
-        Node(
-            package='slam',
-            executable='odom_to_tf_relay',
-            name='odom_to_tf_relay',
-            parameters=[{'use_sim_time': True}], # <-- Added Sim Time
-            output='screen'
-        ),
-
+        # 4. MAVROS Integration
         IncludeLaunchDescription(
             AnyLaunchDescriptionSource(
                 os.path.join(get_package_share_directory('mavros'), 'launch', 'apm.launch')
             ),
             launch_arguments={
                 'fcu_url': 'udp://127.0.0.1:14550@14555',
-                'use_sim_time': 'true',          # <-- Added Sim Time for MAVROS
+                'use_sim_time': 'true',
             }.items()
         ),
 
-        # Node(
-        #     package='slam_toolbox',
-        #     executable='async_slam_toolbox_node',
-        #     name='slam_toolbox',
-        #     output='screen',
-        #     parameters=[{
-        #         'use_sim_time': True,
-        #         'odom_frame': 'odom',
-        #         'map_frame': 'map',
-        #         'base_frame': 'base_link',
-        #         'scan_topic': '/vessel/lidar',
-        #         'mode': 'mapping'
-        #     }]
-        # )
         # 5. Cartographer Node
         Node(
             package='cartographer_ros',
@@ -101,7 +81,7 @@ def generate_launch_description():
             ]
         ),
 
-        # 6. Cartographer Occupancy Grid Node (Publishes standard /map topic)
+        # 6. Cartographer Occupancy Grid Node
         Node(
             package='cartographer_ros',
             executable='cartographer_occupancy_grid_node',
@@ -112,5 +92,37 @@ def generate_launch_description():
                 '-resolution', '0.05',
                 '-publish_period_sec', '1.0'
             ]
-        )
+        ),
+
+        # 7. EKF Localization Node (Replaces odom_to_tf_relay)
+        Node(
+            package='robot_localization',
+            executable='ekf_node',
+            name='ekf_filter_node',
+            output='screen',
+            parameters=[
+                {'use_sim_time': True},
+                {
+                    'frequency': 30.0,
+                    'sensor_timeout': 0.1,
+                    'two_d_mode': True,
+                    'publish_tf': True,
+                    'map_frame': 'map',
+                    'odom_frame': 'odom',
+                    'base_link_frame': 'base_link',
+                    'world_frame': 'odom',
+                    'imu0': '/imu/data',
+                    'imu0_config': [
+                        False, False, False, 
+                        False, False, True,   # Yaw orientation from IMU
+                        False, False, False, 
+                        False, False, True,   # Angular velocity
+                        True,  True,  False   # Linear acceleration
+                    ],
+                    'imu0_differential': False,
+                    'imu0_relative': False,
+                }
+            ],
+            remappings=[('odometry/filtered', '/odom')]
+        ),
     ])
