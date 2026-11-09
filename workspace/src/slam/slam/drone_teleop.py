@@ -27,7 +27,7 @@ class DroneTeleop(Node):
         self.arm_client = self.create_client(CommandBool, '/mavros/cmd/arming')
         self.takeoff_client = self.create_client(CommandTOL, '/mavros/cmd/takeoff')
 
-        self.speed = 1.0 # m/s
+        self.speed = 0.5 # m/s
 
     def publish_twist(self, x, y):
         twist = Twist()

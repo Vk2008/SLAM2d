@@ -1,6 +1,9 @@
 import os
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.actions import GroupAction
+from launch.actions import ExecuteProcess, TimerAction
+from launch_ros.actions import SetParameter
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import AnyLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
@@ -54,14 +57,27 @@ def generate_launch_description():
         ),
 
         # 4. MAVROS Integration
-        IncludeLaunchDescription(
-            AnyLaunchDescriptionSource(
-                os.path.join(get_package_share_directory('mavros'), 'launch', 'apm.launch')
-            ),
-            launch_arguments={
-                'fcu_url': 'udp://127.0.0.1:14550@14555',
-                'use_sim_time': 'true',
-            }.items()
+        GroupAction(
+            scoped=True,
+            actions=[
+                SetParameter(
+                    name='use_sim_time',
+                    value=True
+                ),
+
+                IncludeLaunchDescription(
+                    AnyLaunchDescriptionSource(
+                        os.path.join(
+                            get_package_share_directory('mavros'),
+                            'launch',
+                            'apm.launch'
+                        )
+                    ),
+                    launch_arguments={
+                        'fcu_url': 'udp://127.0.0.1:14550@14555',
+                    }.items()
+                )
+            ]
         ),
 
         # 5. Cartographer Node
@@ -77,7 +93,7 @@ def generate_launch_description():
             ],
             remappings=[
                 ('scan', '/vessel/lidar'),
-                ('odom', '/odom')
+                ('imu', '/mavros/imu/data_raw')
             ]
         ),
 
@@ -94,35 +110,22 @@ def generate_launch_description():
             ]
         ),
 
-        # 7. EKF Localization Node (Replaces odom_to_tf_relay)
-        Node(
-            package='robot_localization',
-            executable='ekf_node',
-            name='ekf_filter_node',
-            output='screen',
-            parameters=[
-                {'use_sim_time': True},
-                {
-                    'frequency': 30.0,
-                    'sensor_timeout': 0.1,
-                    'two_d_mode': True,
-                    'publish_tf': True,
-                    'map_frame': 'map',
-                    'odom_frame': 'odom',
-                    'base_link_frame': 'base_link',
-                    'world_frame': 'odom',
-                    'imu0': '/imu/data',
-                    'imu0_config': [
-                        False, False, False, 
-                        False, False, True,   # Yaw orientation from IMU
-                        False, False, False, 
-                        False, False, True,   # Angular velocity
-                        True,  True,  False   # Linear acceleration
+        # 7. MAVROS Service Call to increase IMU publish rate
+        TimerAction(
+            period=5.0,
+            actions=[
+                ExecuteProcess(
+                    cmd=[
+                        'ros2', 'service', 'call',
+                        '/mavros/cmd/command',
+                        'mavros_msgs/srv/CommandLong',
+                        '{broadcast: false, command: 511, confirmation: 0, '
+                        'param1: 105.0, param2: 20000.0, '
+                        'param3: 0.0, param4: 0.0, '
+                        'param5: 0.0, param6: 0.0, param7: 0.0}'
                     ],
-                    'imu0_differential': False,
-                    'imu0_relative': False,
-                }
-            ],
-            remappings=[('odometry/filtered', '/odom')]
+                    output='screen'
+                )
+            ]
         ),
     ])

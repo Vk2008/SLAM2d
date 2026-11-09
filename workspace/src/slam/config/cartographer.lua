@@ -5,18 +5,17 @@ options = {
   map_builder = MAP_BUILDER,
   trajectory_builder = TRAJECTORY_BUILDER,
   map_frame = 'map',
-  tracking_frame = 'base_link',
-  published_frame = 'odom',
+  tracking_frame = 'base_link',             -- Frame where IMU measurements are tracked
+  published_frame = 'base_link',            -- Frame Cartographer drives (base_link)
   odom_frame = 'odom',
-  provide_odom_frame = false,
+  provide_odom_frame = true,                -- Cartographer will now publish map -> odom -> base_link
   publish_frame_projected_to_2d = true,
   use_pose_extrapolator = true,
-  use_odometry = true,
+  use_odometry = false,                     -- Stop expecting external odometry
   use_nav_sat = false,
   use_landmarks = false,
   num_laser_scans = 1,
   num_multi_echo_laser_scans = 0,
---   num_submaps_with_2d_laser_scans = 1,
   num_point_clouds = 0,
   lookup_transform_timeout_sec = 0.2,
   submap_publish_period_sec = 0.3,
@@ -27,14 +26,13 @@ options = {
   fixed_frame_pose_sampling_ratio = 1.,
   imu_sampling_ratio = 1.,
   landmarks_sampling_ratio = 1.,
---   use_imu_data = false,
   num_subdivisions_per_laser_scan = 1,
 }
 
 MAP_BUILDER.use_trajectory_builder_2d = true
 
 -- Configure 2D Trajectory Parameters
-TRAJECTORY_BUILDER_2D.use_imu_data = false
+TRAJECTORY_BUILDER_2D.use_imu_data = true    -- Enable IMU processing
 TRAJECTORY_BUILDER_2D.min_range = 0.15
 TRAJECTORY_BUILDER_2D.max_range = 12.0
 TRAJECTORY_BUILDER_2D.missing_data_ray_length = 5.
