@@ -26,6 +26,7 @@ setup(
         'console_scripts': [
             'drone_teleop = slam.drone_teleop:main',
             'odom_to_tf_relay = slam.odom_to_tf:main',
+            'cartographer_odom_bridge = slam.cartographer_odom_bridge:main'
         ],
     },
 )

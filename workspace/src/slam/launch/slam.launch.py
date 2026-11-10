@@ -112,7 +112,7 @@ def generate_launch_description():
 
         # 7. MAVROS Service Call to increase IMU publish rate
         TimerAction(
-            period=5.0,
+            period=7.0,
             actions=[
                 ExecuteProcess(
                     cmd=[
@@ -127,5 +127,30 @@ def generate_launch_description():
                     output='screen'
                 )
             ]
+        ),
+        TimerAction(
+            period=10.0,
+            actions=[
+                ExecuteProcess(
+                    cmd=[
+                        'ros2', 'topic', 'pub', '--once',
+                        '/mavros/global_position/set_gp_origin',
+                        'geographic_msgs/msg/GeoPointStamped',
+                        r'{position: {latitude: -35.3621474, longitude: 149.1651746, altitude: 600.0}}'
+                    ],
+                    output='screen'
+                )
+            ]
+        ),
+
+        # 8. Cartographer Odom Bridge
+        Node(
+            package='slam',
+            executable='cartographer_odom_bridge',
+            name='cartographer_odom_bridge',
+            parameters=[
+                {'use_sim_time': True}
+            ],
+            output='screen'
         ),
     ])
